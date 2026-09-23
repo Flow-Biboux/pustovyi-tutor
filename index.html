@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Пустовий Олег Миколайович — репетитор з математики та фізики</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board-dark:#1b2b23;
+    --board:#24382e;
+    --board-light:#2f4a3d;
+    --chalk:#f4efe2;
+    --chalk-dim:#cfd9d0;
+    --ochre:#d4a34c;
+    --sage:#8fae96;
+    --line: rgba(244,239,226,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--board-dark);
+    color:var(--chalk);
+    font-family:'PT Sans', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{ font-family:'PT Serif', serif; font-weight:700; letter-spacing:0.01em; }
+  .formula{ font-family:'JetBrains Mono', monospace; }
+  a{color:inherit;}
+
+  /* chalk texture */
+  .chalkboard{
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(244,239,226,0.03), transparent 40%),
+      radial-gradient(ellipse at 80% 70%, rgba(244,239,226,0.025), transparent 45%);
+  }
+
+  header{
+    position:sticky; top:0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:18px 6vw;
+    background:rgba(27,43,35,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{ font-family:'PT Serif',serif; font-size:1.15rem; font-weight:700; }
+  .brand span{ color:var(--ochre); }
+  .lang-toggle{
+    display:flex; border:1px solid var(--line); border-radius:100px; overflow:hidden;
+  }
+  .lang-toggle button{
+    background:none; border:none; color:var(--chalk-dim);
+    font-family:'PT Sans',sans-serif; font-size:0.85rem; font-weight:700;
+    padding:7px 16px; cursor:pointer; letter-spacing:0.03em;
+    transition:all .2s ease;
+  }
+  .lang-toggle button.active{ background:var(--ochre); color:var(--board-dark); }
+
+  /* HERO */
+  .hero{
+    position:relative;
+    min-height:88vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:8vh 6vw 6vh;
+    overflow:hidden;
+  }
+  .hero-inner{
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:44px; align-items:center;
+    max-width:1100px; margin:0 auto; width:100%;
+  }
+  .hero-photo{
+    text-align:center;
+  }
+  .hero-photo img{
+    max-width:300px;
+    width:100%;
+    height:auto;
+    display:inline-block;
+    border:1px solid var(--ochre);
+    outline:1px solid rgba(212,163,76,0.25);
+    outline-offset:6px;
+    box-shadow:0 24px 48px rgba(0,0,0,0.35);
+  }
+  .cred-strip{
+    display:flex; align-items:center; flex-wrap:wrap; gap:18px;
+    margin-top:36px; padding-top:24px; border-top:1px solid var(--line);
+  }
+  .cred-item{ display:flex; align-items:baseline; gap:8px; }
+  .cred-num{
+    font-family:'PT Serif',serif; font-weight:700; font-size:1.5rem; color:var(--ochre);
+  }
+  .cred-label, .cred-text{
+    font-size:0.8rem; color:var(--chalk-dim); font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.02em;
+  }
+  .cred-sep{ width:1px; height:16px; background:var(--line); }
+  .eyebrow{
+    color:var(--sage); font-family:'JetBrains Mono',monospace; font-size:0.82rem;
+    letter-spacing:0.12em; text-transform:uppercase; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:''; width:26px; height:1px; background:var(--sage); }
+  h1.title{
+    font-size:clamp(2.1rem, 4.2vw, 3.4rem);
+    line-height:1.15;
+    margin-bottom:22px;
+  }
+  h1.title .accent{ color:var(--ochre); }
+  .lede{
+    font-size:1.08rem; color:var(--chalk-dim); max-width:46ch; margin-bottom:34px;
+  }
+  .lede-list{
+    list-style:none;
+    max-width:46ch;
+    margin:0 0 34px 0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .lede-list li{
+    position:relative;
+    padding-left:26px;
+    font-size:1.03rem;
+    color:var(--chalk-dim);
+    line-height:1.5;
+  }
+  .lede-list li::before{
+    content:'';
+    position:absolute;
+    left:0; top:0.55em;
+    width:14px; height:2px;
+    background:var(--ochre);
+  }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:14px 28px; border-radius:6px;
+    font-weight:700; font-size:0.95rem; text-decoration:none;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-primary{ background:var(--ochre); color:var(--board-dark); }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(212,163,76,0.25); }
+  .btn-ghost{ border:1px solid var(--line); color:var(--chalk); }
+  .btn-ghost:hover{ border-color:var(--sage); }
+
+  /* hero visual: chalk formulas draw themselves */
+  .formula-panel{
+    position:relative;
+    aspect-ratio:1/1.1;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--board);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .formula-panel svg{ width:88%; height:88%; }
+  .chalk-path{
+    fill:none; stroke:var(--chalk); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;
+    stroke-dasharray:1000; stroke-dashoffset:1000;
+    animation:draw 3.2s ease forwards;
+    opacity:0.92;
+  }
+  .chalk-path.ochre{ stroke:var(--ochre); }
+  .chalk-path.sage{ stroke:var(--sage); }
+  .d1{animation-delay:.2s;} .d2{animation-delay:1.1s;} .d3{animation-delay:1.9s;} .d4{animation-delay:2.4s;}
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .avatar-badge{
+    position:absolute; bottom:-32px; left:-32px;
+    width:132px; height:auto;
+    overflow:visible;
+  }
+  .avatar-badge img{ border-radius:0; box-shadow:0 10px 26px rgba(0,0,0,0.35); }
+  .avatar-badge img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+
+  /* SECTIONS */
+  section{ padding:9vh 6vw; max-width:1180px; margin:0 auto; }
+  .section-head{ margin-bottom:48px; max-width:60ch; }
+  .section-head .eyebrow{ margin-bottom:12px; }
+  .section-head h2{ font-size:clamp(1.6rem,3vw,2.3rem); }
+  .divider{ height:1px; background:var(--line); max-width:1180px; margin:0 auto; position:relative; }
+  .divider::after{
+    content:'◆'; position:absolute; left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    background:var(--board-dark); color:var(--ochre); font-size:0.6rem;
+    padding:0 14px;
+  }
+  .float-cta{
+    position:fixed; right:24px; bottom:24px; z-index:60;
+    background:var(--ochre); color:var(--board-dark);
+    padding:14px 22px; border-radius:100px; font-weight:700; font-size:0.9rem;
+    text-decoration:none; box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    opacity:0; transform:translateY(12px); pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  .float-cta.visible{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+  /* ABOUT */
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
+  .approach-text{ color:var(--chalk-dim); max-width:70ch; font-size:1.02rem; margin-bottom:36px; }
+  .funnel{
+    display:flex; flex-wrap:wrap; align-items:center; gap:14px;
+  }
+  .funnel-step{
+    background:var(--board); border:1px solid var(--line); border-radius:8px;
+    padding:12px 20px; font-family:'PT Serif',serif; font-weight:700; font-size:0.98rem;
+    color:var(--chalk);
+  }
+  .funnel-step-final{ background:var(--ochre); color:var(--board-dark); border-color:var(--ochre); }
+  .funnel-arrow{ color:var(--sage); font-size:1.1rem; }
+
+  /* ADVANTAGES */
+  .adv-grid{
+    list-style:none; margin:0; padding:0;
+    display:grid; grid-template-columns:repeat(2, 1fr); gap:16px 32px;
+  }
+  .adv-grid li{
+    position:relative; padding-left:26px; color:var(--chalk-dim);
+    font-size:0.98rem; line-height:1.5;
+  }
+  .adv-grid li::before{
+    content:''; position:absolute; left:0; top:0.55em;
+    width:14px; height:2px; background:var(--ochre);
+  }
+
+  /* DIAGNOSIS */
+  .diag-list{
+    counter-reset:diag; list-style:none; margin:0 0 28px 0; padding:0;
+    display:flex; flex-direction:column; gap:16px; max-width:70ch;
+  }
+  .diag-list li{
+    counter-increment:diag; position:relative; padding-left:44px;
+    color:var(--chalk); font-size:1rem; line-height:1.5;
+  }
+  .diag-list li::before{
+    content:counter(diag); position:absolute; left:0; top:-2px;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--board); border:1px solid var(--ochre); color:var(--ochre);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.9rem;
+  }
+  .diag-outcome{
+    color:var(--sage); font-size:0.98rem; max-width:70ch; margin-bottom:28px;
+  }
+
+  .cards-4{ grid-template-columns:repeat(4, 1fr); }
+  @media (max-width: 1000px){ .cards-4{ grid-template-columns:repeat(2, 1fr); } }
+
+  /* PHILOSOPHY */
+  .philosophy-box{
+    border-left:3px solid var(--ochre); padding-left:32px; max-width:76ch;
+  }
+  .philosophy-quote{
+    font-family:'PT Serif',serif; font-weight:700; font-style:italic;
+    font-size:clamp(1.5rem, 3vw, 2rem); color:var(--chalk); margin-bottom:20px; display:block;
+  }
+  .philosophy-box p{ color:var(--chalk-dim); font-size:1rem; line-height:1.65; }
+  .about-grid p{ color:var(--chalk-dim); margin-bottom:16px; }
+  .stat-strip{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:8px; }
+  .stat{ border-left:2px solid var(--ochre); padding-left:14px; }
+  .stat .num{ font-family:'PT Serif',serif; font-size:2.1rem; font-weight:700; color:var(--chalk); display:block; }
+  .stat .label{ font-size:0.82rem; color:var(--chalk-dim); }
+
+  /* TIMELINE */
+  .timeline{ position:relative; padding-left:28px; border-left:1px solid var(--line); }
+  .tl-item{ position:relative; padding-bottom:36px; }
+  .tl-item:last-child{ padding-bottom:0; }
+  .tl-item::before{
+    content:''; position:absolute; left:-33px; top:4px;
+    width:10px; height:10px; border-radius:50%; background:var(--sage);
+    border:2px solid var(--board-dark);
+  }
+  .tl-item h3{ font-size:1.05rem; margin-bottom:6px; }
+  .tl-item p{ color:var(--chalk-dim); font-size:0.95rem; }
+
+  /* SUBJECTS */
+  .cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .card{
+    background:var(--board); border:1px solid var(--line); border-radius:10px;
+    padding:28px 24px; transition:border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{ border-color:var(--sage); transform:translateY(-3px); }
+  .card .glyph{ font-family:'JetBrains Mono',monospace; color:var(--ochre); font-size:1.4rem; margin-bottom:14px; display:block; }
+  .card h3{ font-size:1.1rem; margin-bottom:8px; }
+  .card p{ color:var(--chalk-dim); font-size:0.92rem; }
+
+  /* PRICING */
+  .price-table{ border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .price-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 26px; border-bottom:1px solid var(--line);
+  }
+  .price-row:last-child{ border-bottom:none; }
+  .price-row .name{ font-weight:700; }
+  .price-row .note{ color:var(--chalk-dim); font-size:0.85rem; }
+  .price-row .amount{ font-family:'PT Serif',serif; font-size:1.3rem; color:var(--ochre); font-weight:700; white-space:nowrap; }
+  .price-flag{
+    margin-top:16px; font-size:0.85rem; color:var(--chalk-dim);
+    border:1px dashed var(--line); border-radius:6px; padding:12px 16px;
+  }
+
+  /* CALENDAR */
+  .cal-hint{ color:var(--chalk-dim); font-size:0.92rem; margin-bottom:26px; max-width:60ch; }
+  .cal-days{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+    gap:14px;
+  }
+  .cal-day{
+    background:var(--board); border:1px solid var(--line); border-radius:10px;
+    padding:16px;
+  }
+  .cal-day .cal-date{
+    font-family:'PT Serif',serif; font-weight:700; font-size:1rem;
+    margin-bottom:12px; color:var(--chalk);
+  }
+  .cal-slots{ display:flex; flex-wrap:wrap; gap:8px; }
+  .cal-slot{
+    background:var(--board-dark); border:1px solid var(--line); color:var(--chalk-dim);
+    border-radius:6px; padding:6px 10px; font-size:0.85rem; font-family:'JetBrains Mono',monospace;
+    cursor:pointer; transition:all .15s ease;
+  }
+  .cal-slot:hover{ border-color:var(--sage); color:var(--chalk); }
+  .cal-slot.chosen{ background:var(--ochre); border-color:var(--ochre); color:var(--board-dark); font-weight:700; }
+  .cal-selected{
+    margin-top:20px; font-size:0.95rem; color:var(--sage); min-height:1.4em;
+  }
+
+  /* CONTACT */
+  .contact-box{
+    display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;
+    background:var(--board); border:1px solid var(--line); border-radius:14px;
+    padding:52px 48px;
+  }
+  .contact-box h2{ font-size:1.8rem; margin-bottom:14px; }
+  .contact-box p{ color:var(--chalk-dim); margin-bottom:26px; }
+  form{ display:flex; flex-direction:column; gap:14px; }
+  input, textarea{
+    background:var(--board-dark); border:1px solid var(--line); border-radius:6px;
+    padding:13px 14px; color:var(--chalk); font-family:'PT Sans',sans-serif; font-size:0.95rem;
+  }
+  input:focus, textarea:focus{ outline:2px solid var(--sage); outline-offset:1px; }
+  textarea{ resize:vertical; min-height:90px; }
+  .contact-links{ display:flex; gap:14px; margin-top:22px; flex-wrap:wrap; }
+  .contact-links a{
+    border:1px solid var(--line); border-radius:6px; padding:10px 16px; font-size:0.88rem;
+    text-decoration:none;
+  }
+
+  footer{
+    text-align:center; padding:36px 6vw; color:var(--chalk-dim); font-size:0.82rem;
+    border-top:1px solid var(--line);
+  }
+
+  [data-i18n]{ display:none; }
+  [data-i18n].active{ display:inline; }
+  [data-i18n-block]{ display:none; }
+  [data-i18n-block].active{ display:block; }
+
+  @media (max-width: 860px){
+    .hero-inner{ grid-template-columns:1fr; }
+    .formula-panel{ order:-1; max-width:340px; margin:0 auto; }
+    .about-grid, .contact-box{ grid-template-columns:1fr; }
+    .cards, .cards-4{ grid-template-columns:1fr; }
+    .adv-grid{ grid-template-columns:1fr; }
+    .stat-strip{ grid-template-columns:1fr; gap:14px; }
+    section{ padding:7vh 6vw; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .chalk-path{ animation:none; stroke-dashoffset:0; }
+  }
+
+  /* ============ PREMIUM POLISH PASS ============ */
+
+  /* PUBLICATIONS */
+  .pub-stats{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:32px;
+  }
+  .pub-stat{
+    background:var(--board); border:1px solid var(--line); border-radius:10px;
+    padding:20px 16px; text-align:center;
+  }
+  .pub-stat .num{
+    display:block; font-family:'PT Serif',serif; font-weight:700; font-size:2rem; color:var(--ochre-bright);
+    margin-bottom:6px;
+  }
+  .pub-stat .label{ font-size:0.82rem; color:var(--chalk-dim); }
+  .pub-full{
+    border:1px solid var(--line); border-radius:12px; padding:6px 24px; background:var(--board);
+  }
+  .pub-full summary{
+    cursor:pointer; padding:18px 0; font-weight:700; font-family:'PT Serif',serif;
+    color:var(--chalk); list-style:none; display:flex; justify-content:space-between; align-items:center;
+  }
+  .pub-full summary::-webkit-details-marker{ display:none; }
+  .pub-full summary::after{ content:'+'; color:var(--ochre-bright); font-size:1.3rem; }
+  .pub-full[open] summary::after{ content:'\\2212'; }
+  .pub-note{ color:var(--chalk-dim); font-size:0.85rem; font-style:italic; margin-bottom:20px; }
+  .pub-group{ margin-bottom:24px; }
+  .pub-group h4{
+    font-family:'PT Serif',serif; color:var(--ochre-bright); font-size:0.98rem; margin-bottom:10px;
+  }
+  .pub-group .pub-count{ color:var(--chalk-dim); font-weight:400; font-size:0.85rem; }
+  .pub-list{ list-style:none; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .pub-list li{
+    color:var(--chalk-dim); font-size:0.85rem; line-height:1.55; padding-left:16px; position:relative;
+  }
+  .pub-list li::before{ content:'—'; position:absolute; left:0; color:var(--line); }
+  @media (max-width:700px){ .pub-stats{ grid-template-columns:repeat(2, 1fr); } }
+
+  /* MEDIA (diploma / video placeholders) */
+  .media-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:24px; }
+  .media-card{
+    background:var(--board); border:1px dashed var(--line); border-radius:14px;
+    padding:28px; text-align:center;
+  }
+  .media-placeholder{
+    aspect-ratio:16/10; border:1px dashed var(--ochre); border-radius:10px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    color:var(--ochre); font-family:'PT Serif',serif; font-weight:700; font-size:1.05rem;
+    padding:20px; margin-bottom:16px;
+  }
+  .media-note{ color:var(--chalk-dim); font-size:0.88rem; }
+  @media (max-width:700px){ .media-grid{ grid-template-columns:1fr; } }
+  .media-card-video{ display:flex; flex-direction:column; }
+  .video-embed{
+    width:100%; max-width:280px; margin:0 auto 16px;
+    aspect-ratio:9/16; border-radius:10px; background:#000;
+    display:none; border:1px solid var(--line);
+  }
+  .video-embed.active{ display:block; }
+
+  /* REVIEWS (empty state) */
+  .reviews-empty{
+    border:1px dashed var(--line); border-radius:14px; padding:40px;
+    text-align:center; color:var(--chalk-dim); font-size:0.98rem;
+  }
+  .reviews-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;
+  }
+  .review-card{
+    background:var(--board); border:1px solid var(--line); border-radius:14px;
+    padding:18px; text-align:center;
+  }
+  .review-video{
+    width:100%; max-width:220px; aspect-ratio:9/16; border-radius:10px;
+    background:#000; margin:0 auto 14px; display:block;
+  }
+  .review-caption{ color:var(--chalk-dim); font-size:0.88rem; }
+  @media (max-width:860px){ .reviews-grid{ grid-template-columns:1fr; } }
+
+  /* FAQ */
+  .faq-list{ display:flex; flex-direction:column; gap:12px; max-width:78ch; }
+  .faq-item{
+    background:var(--board); border:1px solid var(--line); border-radius:10px;
+    padding:6px 22px; transition:border-color .2s ease;
+  }
+  .faq-item[open]{ border-color:rgba(201,154,77,0.35); }
+  .faq-item summary{
+    cursor:pointer; padding:16px 0; font-weight:700; font-family:'PT Serif',serif;
+    font-size:1rem; color:var(--chalk); list-style:none;
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary::after{
+    content:'+'; color:var(--ochre-bright); font-size:1.3rem; font-weight:400;
+    transition:transform .2s ease; flex-shrink:0;
+  }
+  .faq-item[open] summary::after{ transform:rotate(45deg); }
+  .faq-item p{ color:var(--chalk-dim); font-size:0.95rem; line-height:1.6; padding-bottom:18px; }
+
+  :root{
+    --board-dark:#16241d;
+    --board:#213629;
+    --board-light:#2c4436;
+    --chalk:#f7f2e4;
+    --chalk-dim:#c9d3c9;
+    --ochre:#c99a4d;
+    --ochre-bright:#e0b667;
+    --sage:#8fae96;
+    --line: rgba(247,242,228,0.12);
+    --shadow-soft: 0 20px 50px rgba(0,0,0,0.35);
+    --shadow-lift: 0 30px 70px rgba(0,0,0,0.45);
+  }
+  body{
+    letter-spacing:0.005em;
+    background-image:
+      radial-gradient(ellipse 1200px 800px at 15% -10%, rgba(201,154,77,0.06), transparent 55%),
+      radial-gradient(ellipse 900px 700px at 100% 20%, rgba(143,174,150,0.05), transparent 50%);
+    background-attachment:fixed;
+  }
+  h1, h2, h3{ letter-spacing:-0.01em; }
+  h2{ line-height:1.2; }
+
+  header{
+    padding:20px 6vw;
+    border-bottom:1px solid var(--line);
+    background:rgba(22,36,29,0.86);
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px; font-size:1.05rem;
+  }
+  .brand::before{
+    content:''; width:9px; height:9px; border-radius:2px;
+    background:linear-gradient(135deg, var(--ochre-bright), var(--ochre));
+    transform:rotate(45deg);
+    box-shadow:0 0 12px rgba(201,154,77,0.5);
+  }
+  .lang-toggle{ border-color:var(--line); }
+  .lang-toggle button.active{
+    background:linear-gradient(135deg, var(--ochre-bright), var(--ochre));
+    color:var(--board-dark);
+  }
+
+  .hero{ padding-top:11vh; }
+  .eyebrow::before{ background:linear-gradient(90deg, var(--sage), transparent); width:30px; }
+  h1.title{ letter-spacing:-0.02em; }
+  h1.title .accent{
+    background:linear-gradient(100deg, var(--ochre-bright), var(--ochre));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  .lede-list li::before{
+    background:linear-gradient(90deg, var(--ochre-bright), var(--ochre));
+    height:2px; width:16px; top:0.6em;
+  }
+
+  .btn{
+    position:relative; letter-spacing:0.01em;
+    transition:transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s ease, border-color .2s ease;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--ochre-bright), var(--ochre));
+    box-shadow:0 10px 24px rgba(201,154,77,0.22);
+  }
+  .btn-primary::after{
+    content:'→'; margin-left:8px; display:inline-block;
+    transition:transform .2s ease;
+  }
+  .btn-primary:hover{
+    transform:translateY(-3px);
+    box-shadow:0 16px 34px rgba(201,154,77,0.32);
+  }
+  .btn-primary:hover::after{ transform:translateX(3px); }
+  .btn-ghost{ border-color:var(--line); backdrop-filter:blur(2px); }
+  .btn-ghost:hover{ border-color:var(--ochre); background:rgba(201,154,77,0.06); transform:translateY(-2px); }
+
+  .cred-strip{ gap:22px 26px; }
+  .cred-item{
+    background:rgba(247,242,228,0.03);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 14px;
+  }
+  .cred-num{ color:var(--ochre-bright); }
+  .cred-sep{ display:none; }
+
+  .hero-photo img{
+    border-color:var(--ochre-bright);
+    outline-color:rgba(201,154,77,0.3);
+    box-shadow:var(--shadow-lift);
+    transition:transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .hero-photo img:hover{ transform:translateY(-4px); }
+
+  section{ padding:10vh 6vw; }
+  .section-head{ margin-bottom:56px; }
+  .section-head h2{ letter-spacing:-0.015em; }
+
+  .card, .cal-day{
+    border-radius:14px;
+    position:relative;
+    overflow:hidden;
+    transition:transform .28s cubic-bezier(.2,.8,.2,1), border-color .25s ease, box-shadow .28s ease;
+  }
+  .card::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--ochre-bright), transparent);
+    opacity:0; transition:opacity .25s ease;
+  }
+  .card:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow-soft);
+    border-color:rgba(201,154,77,0.35);
+  }
+  .card:hover::before{ opacity:1; }
+  .card .glyph{ font-size:1.6rem; }
+
+  .timeline{ border-left-color:var(--line); }
+  .tl-item::before{
+    background:var(--ochre-bright);
+    box-shadow:0 0 0 4px rgba(201,154,77,0.12);
+  }
+
+  .funnel-step{
+    border-radius:10px;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .funnel-step:hover{ transform:translateY(-3px); box-shadow:var(--shadow-soft); }
+  .funnel-step-final{
+    background:linear-gradient(135deg, var(--ochre-bright), var(--ochre));
+    box-shadow:0 10px 26px rgba(201,154,77,0.25);
+  }
+
+  .adv-grid li::before{ background:linear-gradient(90deg, var(--ochre-bright), var(--ochre)); width:16px; }
+
+  .diag-list li::before{
+    border-color:var(--ochre-bright); color:var(--ochre-bright);
+    box-shadow:0 0 0 4px rgba(201,154,77,0.1);
+  }
+
+  .price-table{ border-radius:14px; overflow:hidden; box-shadow:var(--shadow-soft); }
+  .price-row{ transition:background .2s ease; position:relative; }
+  .price-row:hover{ background:rgba(247,242,228,0.02); }
+  .price-row:nth-child(2)::before{
+    content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+    background:linear-gradient(180deg, var(--ochre-bright), var(--ochre));
+  }
+  .price-row .amount{ color:var(--ochre-bright); }
+
+  .cal-day{ transition:transform .25s ease, border-color .25s ease; }
+  .cal-day:hover{ transform:translateY(-3px); border-color:rgba(201,154,77,0.3); }
+  .cal-slot{ border-radius:8px; }
+  .cal-slot.chosen{
+    background:linear-gradient(135deg, var(--ochre-bright), var(--ochre));
+    border-color:var(--ochre-bright);
+    box-shadow:0 8px 20px rgba(201,154,77,0.3);
+  }
+
+  .philosophy-box{ border-left-color:var(--ochre-bright); }
+  .philosophy-quote{
+    background:linear-gradient(100deg, var(--chalk), var(--ochre-bright) 120%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  .contact-box{
+    border-radius:16px;
+    background:linear-gradient(160deg, var(--board), var(--board-dark));
+    box-shadow:var(--shadow-soft);
+  }
+  input, textarea{ border-radius:8px; transition:border-color .2s ease, box-shadow .2s ease; }
+  input:focus, textarea:focus{
+    outline:none; border-color:var(--ochre-bright);
+    box-shadow:0 0 0 3px rgba(201,154,77,0.15);
+  }
+  .contact-links a{ border-radius:8px; transition:border-color .2s ease, transform .2s ease; }
+  .contact-links a:hover{ border-color:var(--ochre-bright); transform:translateY(-2px); }
+
+  footer{
+    padding:56px 6vw 40px;
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  footer::before{
+    content:''; width:34px; height:1px;
+    background:linear-gradient(90deg, transparent, var(--ochre-bright), transparent);
+    margin-bottom:8px;
+  }
+
+  .float-cta{
+    background:linear-gradient(135deg, var(--ochre-bright), var(--ochre));
+    box-shadow:0 16px 40px rgba(0,0,0,0.4);
+  }
+
+  [data-reveal]{
+    opacity:0; transform:translateY(18px);
+    transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1);
+  }
+  [data-reveal].revealed{ opacity:1; transform:translateY(0); }
+
+  @media (prefers-reduced-motion: reduce){
+    [data-reveal]{ opacity:1; transform:none; transition:none; }
+    .card, .cal-day, .btn, .hero-photo img, .funnel-step{ transition:none; }
+  }
+</style>
+</head>
+<body class="chalkboard">
+
+<header>
+  <div class="brand">О.М. <span>Пустовий</span></div>
+  <div class="lang-toggle">
+    <button data-lang="uk" class="active" onclick="setLang('uk')">УКР</button>
+    <button data-lang="ru" onclick="setLang('ru')">РУС</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">
+        <span data-i18n="uk" class="active">35 років у ліцеї та університеті. Участь у розробці ЗНО</span>
+        <span data-i18n="ru">35 лет в лицее и университете. Участие в разработке ЗНО</span>
+      </div>
+      <h1 class="title">
+        <span data-i18n-block="uk" class="active">Математика і фізика стають <span class="accent">зрозумілими</span></span>
+        <span data-i18n-block="ru">Математика и физика становятся <span class="accent">понятными</span></span>
+      </h1>
+      <ul class="lede-list">
+        <li>
+          <span data-i18n-block="uk" class="active">Знаходжу і усуваю прогалини у знаннях — не лише поточну тему, а причину, яка часто ховається на кілька років раніше</span>
+          <span data-i18n-block="ru">Нахожу и устраняю пробелы в знаниях — не только текущую тему, а причину, которая часто скрыта на несколько лет раньше</span>
+        </li>
+        <li>
+          <span data-i18n-block="uk" class="active">Пояснюю логіку предмета, а не набір формул для запам'ятовування</span>
+          <span data-i18n-block="ru">Объясняю логику предмета, а не набор формул для заучивания</span>
+        </li>
+        <li>
+          <span data-i18n-block="uk" class="active">Готую системно — до контрольних, НМТ/ЗНО, вступних та сесій</span>
+          <span data-i18n-block="ru">Готовлю системно — к контрольным, НМТ/ЗНО, вступительным и сессиям</span>
+        </li>
+        <li>
+          <span data-i18n-block="uk" class="active">Заняття онлайн — українською та російською, з будь-якої країни</span>
+          <span data-i18n-block="ru">Занятия онлайн — на украинском и русском, из любой страны</span>
+        </li>
+      </ul>
+      <div class="cta-row">
+        <a href="#contact" class="btn btn-primary">
+          <span data-i18n="uk" class="active">Записатися на діагностику</span>
+          <span data-i18n="ru">Записаться на диагностику</span>
+        </a>
+        <a href="#subjects" class="btn btn-ghost">
+          <span data-i18n="uk" class="active">Предмети та ціни</span>
+          <span data-i18n="ru">Предметы и цены</span>
+        </a>
+      </div>
+      <div class="cred-strip">
+        <div class="cred-item">
+          <span class="cred-num">35</span>
+          <span class="cred-label" data-i18n="uk" class="active">років досвіду</span>
+          <span class="cred-label" data-i18n="ru">лет опыта</span>
+        </div>
+        <div class="cred-sep"></div>
+        <div class="cred-item">
+          <span class="cred-text" data-i18n="uk" class="active">ХНУ ім. В. Н. Каразіна</span>
+          <span class="cred-text" data-i18n="ru">ХНУ им. В. Н. Каразина</span>
+        </div>
+        <div class="cred-sep"></div>
+        <div class="cred-item">
+          <span class="cred-text" data-i18n="uk" class="active">Учасник розробки ЗНО</span>
+          <span class="cred-text" data-i18n="ru">Участник разработки ЗНО</span>
+        </div>
+        <div class="cred-sep"></div>
+        <div class="cred-item">
+          <span class="cred-text">УКР / РУС</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-photo">
+      <img src="assets/profile-photo.jpg" alt="Пустовий Олег Миколайович">
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="approach">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Підхід</span>
+      <span data-i18n="ru">Подход</span>
+    </div>
+    <h2>
+      <span data-i18n-block="uk" class="active">Не «допоможу з домашкою», а знайду, де саме зламалось розуміння</span>
+      <span data-i18n-block="ru">Не «помогу с домашкой», а найду, где именно сломалось понимание</span>
+    </h2>
+  </div>
+  <p class="approach-text">
+    <span data-i18n-block="uk" class="active">Проблема з поточною темою часто має причину на кілька років раніше: не засвоєні дроби призводять до проблем з алгеброю, потім із функціями, а далі стає незрозумілою фізика.</span>
+    <span data-i18n-block="ru">Проблема с текущей темой часто имеет причину на несколько лет раньше: неусвоенные дроби приводят к проблемам с алгеброй, потом с функциями, а дальше становится непонятной физика.</span>
+  </p>
+  <div class="funnel">
+    <div class="funnel-step">
+      <span data-i18n="uk" class="active">Діагностика</span>
+      <span data-i18n="ru">Диагностика</span>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step">
+      <span data-i18n="uk" class="active">Фундамент</span>
+      <span data-i18n="ru">Фундамент</span>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step">
+      <span data-i18n="uk" class="active">Розуміння</span>
+      <span data-i18n="ru">Понимание</span>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step">
+      <span data-i18n="uk" class="active">Практика</span>
+      <span data-i18n="ru">Практика</span>
+    </div>
+    <div class="funnel-arrow">→</div>
+    <div class="funnel-step funnel-step-final">
+      <span data-i18n="uk" class="active">Результат</span>
+      <span data-i18n="ru">Результат</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="about">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Про викладача</span>
+      <span data-i18n="ru">О преподавателе</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Досвід, що вимірюється поколіннями учнів</span>
+      <span data-i18n="ru">Опыт, который измеряется поколениями учеников</span>
+    </h2>
+  </div>
+
+  <div class="about-grid">
+    <div>
+      <p data-i18n-block="uk" class="active">
+        Закінчив фізико-технічний факультет Харківського національного університету імені В. Н. Каразіна.
+        За 35 років викладацької діяльності працював у школах, ліцеях та вищих навчальних закладах, а також
+        як приватний репетитор з математики, фізики та хімії.
+      </p>
+      <p data-i18n-block="uk" class="active">
+        Брав участь у створенні українського аналога ЄДІ — зовнішнього незалежного оцінювання (ЗНО),
+        що дає глибоке розуміння логіки екзаменаційних вимог і того, як готувати учнів саме до них.
+      </p>
+      <p data-i18n-block="ru">
+        Окончил физико-технический факультет Харьковского национального университета имени В. Н. Каразина.
+        За 35 лет преподавательской деятельности работал в школах, лицеях и вузах, а также как частный
+        репетитор по математике, физике и химии.
+      </p>
+      <p data-i18n-block="ru">
+        Участвовал в создании украинского аналога ЕГЭ — внешнего независимого оценивания (ЗНО),
+        что даёт глубокое понимание логики экзаменационных требований и того, как готовить учеников именно к ним.
+      </p>
+    </div>
+    <div class="stat-strip">
+      <div class="stat">
+        <span class="num">35</span>
+        <span class="label" data-i18n="uk" class="active">років стажу</span>
+        <span class="label" data-i18n="ru">лет стажа</span>
+      </div>
+      <div class="stat">
+        <span class="num">3</span>
+        <span class="label" data-i18n="uk" class="active">предмети</span>
+        <span class="label" data-i18n="ru">предмета</span>
+      </div>
+      <div class="stat">
+        <span class="num">УКР/РУС</span>
+        <span class="label" data-i18n="uk" class="active">мови викладання</span>
+        <span class="label" data-i18n="ru">языки преподавания</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="path">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Шлях</span>
+      <span data-i18n="ru">Путь</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Від фізтеху до власного кабінету</span>
+      <span data-i18n="ru">От физтеха до своего кабинета</span>
+    </h2>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <h3 data-i18n-block="uk" class="active">Фізико-технічний факультет ХНУ ім. В. Н. Каразіна</h3>
+      <h3 data-i18n-block="ru">Физико-технический факультет ХНУ им. В. Н. Каразина</h3>
+      <p data-i18n-block="uk" class="active">Базова фізико-математична освіта, місто Харків.</p>
+      <p data-i18n-block="ru">Базовое физико-математическое образование, город Харьков.</p>
+    </div>
+    <div class="tl-item">
+      <h3 data-i18n-block="uk" class="active">Викладання у школах, ліцеях та університетах</h3>
+      <h3 data-i18n-block="ru">Преподавание в школах, лицеях и университетах</h3>
+      <p data-i18n-block="uk" class="active">Фізика, математика — очне викладання на різних освітніх рівнях.</p>
+      <p data-i18n-block="ru">Физика, математика — очное преподавание на разных образовательных уровнях.</p>
+    </div>
+    <div class="tl-item">
+      <h3 data-i18n-block="uk" class="active">Участь у створенні ЗНО</h3>
+      <h3 data-i18n-block="ru">Участие в создании ЗНО</h3>
+      <p data-i18n-block="uk" class="active">Робота над українським аналогом ЄДІ — зовнішнім незалежним оцінюванням.</p>
+      <p data-i18n-block="ru">Работа над украинским аналогом ЕГЭ — внешним независимым оцениванием.</p>
+    </div>
+    <div class="tl-item">
+      <h3 data-i18n-block="uk" class="active">Приватні заняття онлайн</h3>
+      <h3 data-i18n-block="ru">Частные занятия онлайн</h3>
+      <p data-i18n-block="uk" class="active">Індивідуальна підготовка учнів з Чернігова, Києва та інших міст.</p>
+      <p data-i18n-block="ru">Индивидуальная подготовка учеников из Чернигова, Киева и других городов.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="advantages">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Переваги</span>
+      <span data-i18n="ru">Преимущества</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Що входить у роботу з викладачем цього рівня</span>
+      <span data-i18n="ru">Что входит в работу с преподавателем этого уровня</span>
+    </h2>
+  </div>
+  <ul class="adv-grid">
+    <li>
+      <span data-i18n-block="uk" class="active">35 років викладання математики та фізики</span>
+      <span data-i18n-block="ru">35 лет преподавания математики и физики</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Досвід у ліцеї та університеті — від шкільної програми до вузівського рівня</span>
+      <span data-i18n-block="ru">Опыт в лицее и университете — от школьной программы до вузовского уровня</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Випускник ХНУ ім. В. Н. Каразіна</span>
+      <span data-i18n-block="ru">Выпускник ХНУ им. В. Н. Каразина</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Участь у створенні ЗНО — розуміння не лише предмета, а й логіки екзаменаційної перевірки</span>
+      <span data-i18n-block="ru">Участие в создании ЗНО — понимание не только предмета, но и логики экзаменационной проверки</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Підготовка до НМТ/ЗНО, випускних та вступних іспитів</span>
+      <span data-i18n-block="ru">Подготовка к НМТ/ЗНО, выпускным и вступительным экзаменам</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Робота зі школярами, абітурієнтами та студентами</span>
+      <span data-i18n-block="ru">Работа со школьниками, абитуриентами и студентами</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Одночасно математика і фізика — цінно для технічних напрямів</span>
+      <span data-i18n-block="ru">Одновременно математика и физика — ценно для технических направлений</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Індивідуальна програма замість однакових уроків для всіх</span>
+      <span data-i18n-block="ru">Индивидуальная программа вместо одинаковых уроков для всех</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Можливість займатися з будь-якої країни</span>
+      <span data-i18n-block="ru">Возможность заниматься из любой страны</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Пояснення складного рідною українською або російською мовою</span>
+      <span data-i18n-block="ru">Объяснение сложного на родном украинском или русском языке</span>
+    </li>
+  </ul>
+</section>
+
+<div class="divider"></div>
+
+<section id="media">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Підтвердження</span>
+      <span data-i18n="ru">Подтверждение</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Диплом і коротке відео-знайомство</span>
+      <span data-i18n="ru">Диплом и короткое видео-знакомство</span>
+    </h2>
+  </div>
+  <div class="media-grid">
+    <div class="media-card">
+      <div class="media-placeholder">
+        <span data-i18n="uk" class="active">Скан диплому ХНУ ім. Каразіна</span>
+        <span data-i18n="ru">Скан диплома ХНУ им. Каразина</span>
+      </div>
+      <p class="media-note">
+        <span data-i18n-block="uk" class="active">Додати після отримання скану (можна приховати особисті дані).</span>
+        <span data-i18n-block="ru">Добавить после получения скана (можно скрыть личные данные).</span>
+      </p>
+    </div>
+    <div class="media-card media-card-video">
+      <video class="video-embed active" data-i18n-block="uk" controls playsinline preload="metadata">
+        <source src="assets/video-uk.mp4" type="video/mp4">
+      </video>
+      <video class="video-embed" data-i18n-block="ru" controls playsinline preload="metadata">
+        <source src="assets/video-ru.mp4" type="video/mp4">
+      </video>
+      <p class="media-note">
+        <span data-i18n-block="uk" class="active">Коротке відео-знайомство українською.</span>
+        <span data-i18n-block="ru">Короткое видео-знакомство на русском.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="publications">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Наукові праці</span>
+      <span data-i18n="ru">Научные труды</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">44 наукові та навчально-методичні праці</span>
+      <span data-i18n="ru">44 научных и учебно-методических труда</span>
+    </h2>
+  </div>
+  <p class="approach-text">
+    <span data-i18n-block="uk" class="active">2003–2013 рр. Один із навчальних посібників офіційно рекомендований Міністерством освіти і науки України для студентів вищих навчальних закладів.</span>
+    <span data-i18n-block="ru">2003–2013 гг. Одно из учебных пособий официально рекомендовано Министерством образования и науки Украины для студентов высших учебных заведений.</span>
+  </p>
+  <div class="pub-stats">
+    <div class="pub-stat"><span class="num">2</span><span class="label" data-i18n="uk" class="active">навчальні посібники</span><span class="label" data-i18n="ru">учебных пособия</span></div>
+    <div class="pub-stat"><span class="num">20</span><span class="label" data-i18n="uk" class="active">статей у фахових виданнях</span><span class="label" data-i18n="ru">статей в специализированных изданиях</span></div>
+    <div class="pub-stat"><span class="num">18</span><span class="label" data-i18n="uk" class="active">матеріалів конференцій</span><span class="label" data-i18n="ru">материалов конференций</span></div>
+    <div class="pub-stat"><span class="num">4</span><span class="label" data-i18n="uk" class="active">міжнародні публікації</span><span class="label" data-i18n="ru">международные публикации</span></div>
+  </div>
+  <details class="pub-full">
+    <summary>
+      <span data-i18n="uk" class="active">Переглянути повний список публікацій</span>
+      <span data-i18n="ru">Посмотреть полный список публикаций</span>
+    </summary>
+    <p class="pub-note">
+      <span data-i18n-block="uk" class="active">Список наведено мовою оригіналу публікації.</span>
+      <span data-i18n-block="ru">Список приведён на языке оригинала публикации.</span>
+    </p>
+    <div class="pub-group">
+      <h4>Навчальні посібники <span class="pub-count">(2)</span></h4>
+      <ul class="pub-list">
+        <li>Пустовий О.М. Лабораторний практикум з фізики рідких кристалів : Навчальний посібник. /Гриценко М.И., Мельничук О.В., Мошель М.В., Пустовий О.М., Рогоза О.В. / - 2013. – 142 c. (Гриф надано Міністерством освіти і науки України “Рекомендовано Міністерством освіти і науки України як навчальний посібник для студентів вищих навчальних закладів” (лист № 1/11-11143 від 09.07.2013 р.))</li>
+        <li>Пустовий О.М.  Тестові завдання з курсу загальної фізики : Навчальний посібник. / Сергієнко В. П., Матвійчук О. В., Пустовий О. М. / -Луцьк, 2010. – 70 c. (</li>
+      </ul>
+    </div>
+    <div class="pub-group">
+      <h4>Статті у наукових фахових виданнях <span class="pub-count">(20)</span></h4>
+      <ul class="pub-list">
+        <li>Гриценко М.І., Кучеєв С.І., Пустовий О.М.  Вивчення фазового стану рідких кристалів за зміною їх текстур.// Вісник Чернігівського державного педагогічного університету. Випуск 23. – Чернігів, 2004. – с.163-167.</li>
+        <li>Гриценко М.І., Кучеєв С.І., Пустовий О.М. Вивчення електрооптичних властивостей рідких кристалів у курсі загальної фізики вищої школи. S-ефект. //Наукові  записки НПУ імені М.П.Драгоманова. Випуск XXI. – Київ, 2004. – с.</li>
+        <li>Гриценко М.І., Кучеєв С.І., Пустовий О.М. Дослідження перебігу фазових переходів у рідких кристалах за зміною їх текстур. // Наукові  записки НПУ імені М.П.Драгоманова. Випуск XXI. – Київ, 2004. – с.</li>
+        <li>Гриценко М.І., Кучеєв С.І., Пустовий О.М. Вивчення інтерференції поляризованого світла в нематичних рідких кристалах в умовах лабораторного практикуму. // Вісник Чернігівського державного педагогічного університету. Випуск 30. – Чернігів, 2005. – с.66-71.</li>
+        <li>Гриценко М.І., Кучеєв С.І., Пустовий О.М. Демонстрація розсіювання світла з використанням електрооптичного ефекту динамічного розсіювання в нематичному рідкому кристалі в курсі загальної фізики. // Вісник Чернігівського державного педагогічного університету. Випуск 36 (2). –  Чернігів, 2006. – с.115-119.</li>
+        <li>Гриценко М.І ., Кучеев С.І., Пустовий О.М Вивчення електрооптичних властивостей рідких кристалів у розділах «Термодинаміка» та «Оптика» курсу загальної фізики вищої школи  Вісник Чернігівського державного педагогічного університету. Випуск 31.-Чернігів, 2007.-с.66-71.</li>
+        <li>Пустовий О.М., Сергиенко В.П., Шепета О.М. Методичні аспекти розробки мультимедійної лекції з курсу  ”Фізика твердого тіла” для магістрантів педагогічних ВНЗ.// . Науковий вісник Ужгородського університету: Серія  “ Педагогіка. Соціальна робота“. – Випуск 14. Ужгород: Ужгородський національний університет. – 2008. – с. 130-132.</li>
+        <li>Пустовий О.М., Сергиенко В.П. Нанотехнології у загальному курсі фізики вищої школи// Збірник наукових праць. Педагогічні науки. Випуск 50. – Частина 2. – Херсон: Видавництво ХДУ, 2008 – с. 336 -339.</li>
+        <li>Пустовий О.М., Шморгун А.В. Розробка програмного забезпечення для лабораторної роботи, працюючої в режимі on-line через USB-інтерфейс// Наукові записки Тернопільського національного педагогічного університету імені Володимира Гнатюка. Серія: Педагогіка. – 2008. - № 7. – с. 107-110.</li>
+        <li>Пустовий О.М., Шепета О.М., Шморгун А.В. Елементи квантової оптики в курсі мультимедійних лекцій теоретичної фізики для педагогічних ВНЗ// Вісник Чернігівського державного педагогічного університету. Випуск 60. – Чернігів, 2009. – с.198-200.</li>
+        <li>Пустовий О.М., Сергієнко В.П. Вивчення акумуляторів нового типу в розділі «Електрика і магнетизм» загального курсу фізики. Наукові записки, випуск 82. Серія педагогічні науки. Кіровоград: РВВ КДПУ імені В. Винниченка. Ч. 1. – 2009. – С. 310-313.</li>
+        <li>Пустовий О.М. Вивчення сучасних двигунів внутрішнього згорання в курсі загальної фізики вищої школи. Науковий вісник Ужгородського університету: Сер  “ Педагогіка. Соціальна робота“. - № 19. Ужгород: Ужгородський національний університет. – 2010. – с. 206-208.</li>
+        <li>Барило О., Пустовий О.М., Шепета О.М.  Психолого-педагогічні засади впровадження знань про нові матеріали та технології у загальному курсі фізики вищої школи// Науковий вісник Ужгородського університету: Серія  “ Педагогіка. Соціальна робота“. - № 19. Ужгород: Ужгородський національний університет. – 2010. – с. 145-148.</li>
+        <li>Пустовий О.М. Тестування, як ефективний метод контролю знань студентів при вивченні спеціальних дисциплін// Науковий часопис НПУ ім М.П. Драгоманова. Серія № 5. Педагогічні науки: реалії та перспективи. – К., 2010. – Вип. 23. – с. 283-286.</li>
+        <li>Пустовий О.М., Шепета О.М., Шморгун А.В. Актуалізація задач загального курсу фізики вищої школи// Збірник наукових праць. Педагогічні науки. Випуск 57. – Херсон: Видавництво ХДУ, 2011. – с.353-356.</li>
+        <li>Пустовий О.М. Сучасні методи модуляції сигналів у загальному курсі фізики// Наукові записки. - Випуск 98. – Серія: Педагогічні науки. - Кіровоград: РВВ КДПУ імені В. Винниченка, 2011. – с. 117-120.</li>
+        <li>Пустовий О.М., Шепета О.М., Шморгун А.В. Формування елементів практичного мислення при проведенні занять з фізики зі студентами педагогічних НЗ// Збірник наукових праць. Педагогічні науки. Випуск 62. – Херсон: Видавництво ХДУ, 2012. – с.310-314.</li>
+        <li>Пустовий О.М. Психолого-педагогічне обґрунтування необхідності наповнення курсу загальної фізики вищої школи знаннями про сучасні технології та досягнення науки й техніки// Вісник Чернігівського національного педагогічного університету.імені Т.Г. Шевченка, Випуск 99. – Чернігів, 2012. – с. 276-279.</li>
+        <li>Дятлов Ю.В., Пустовый О.М. Необходимость наполнения курса общей физики высшей школы знаниями о современных технологиях и достижениях науки и техники// МОЛДОВА!!! С.45-47.</li>
+        <li>Пустовий О.М. Формування знань про рідкі кристали в курсі загальної фізики педагогічних ВНЗ// Вісник Черкаського національного університету.імені Богдана Хмельницького, Серія: Педагогічні науки, № 12 (225). – Черкаси, 2012. – с. 99-103.</li>
+      </ul>
+    </div>
+    <div class="pub-group">
+      <h4>Матеріали науково-практичних конференцій, тези доповідей <span class="pub-count">(18)</span></h4>
+      <ul class="pub-list">
+        <li>Гриценко М.І., Кучеєв С.І., Пустовий О.М.  Вивчення текстур рідких кристалів методом поляризаційної мікроскопії в курсі загальної фізики// Матеріали 8–ї всеукраїнської наукової конференції “Фундаментальна та професійна підготовка фахівців з фізики” – Миколаїв, МДПУ, 2003. – с.</li>
+        <li>Гриценко М.І., Кучеєв С.І., Пустовий О.М.  Вивчення електрооптичних властивостей рідких кристалів у розділах “Електрика” та  “Оптика” Курсу загальної фізики вищої школи// Тези доповідей до міжнародної науково-практичної конференції “Современные  информационные технологии в управлении и профессиональной подготовке операторов сложных систем.” присв’яченої  100-річчю світової авіації та 80-річчю цивільної авіації України. – Кіровоград, 2003. – с.198-199.</li>
+        <li>М.І.Гриценко, С.І.Кучеєв, О.М.Пустовий. Дослідження холестерико-нематичного переходу в оптичній комірці клиноподібної форми// Матеріали Всеукраїнської науково-практичної конференції “Проектування освітніх середовищ як методична проблема”. Тези доповідей. – Херсон. 16-18 вересня 2010р. – с. 41-42.</li>
+        <li>Кучеев С.І., Навроцький Ю.Є., Пустовий О.М.  Тестові завдання для поточного і підсумкового контролю знань студентів з дисципліни “ Фізика рідких кристалів”// Матеріали всеукраїнської науково-практичної конференції “Кредитно-модульна технологія навчання та методичне забезпечення  контролю якості успішності”. Тези доповідей. – Полтава, 24 - 25 січня 2006 – с. 120.</li>
+        <li>Пустовий О.М., Сергиенко В.П. Нові матеріали при вивченні механічних властивостей твердих тіл.// Матеріали Всеукраїнської науково-практичної конференції “Фізика, технічні науки: стан, досягнення і перспективи.” – Полтава. 2008 р. – с. 95-97.</li>
+        <li>Гриценко М.І., Пустовий О.М.  Визначення коефіцієнтів в’язкості  Мієсовича у рідких кристалах методом Стокса. Матеріали третьої міжнародної науково-методичної конференції “Актуальні проблеми викладання та навчання фізики у вищих освітніх закладах” – Львів. 8-9 жовтня 2009 року. – с. 125-129.</li>
+        <li>Пустовий О.М., Бондаренко С.І., Шморгун А.В. Вивчення властивостей веселкової голографії та голографічних методів кодування інформації// Матеріали Міжнародної науково-практичної конференції «Професіоналізм педагога у контексті Європейського вибору України». Частина друга. – Ялта. 22-23 вересня 2009 р. – С. 84-89.</li>
+        <li>Пустовий О.М., Шепета О.М., Шморгун А.В., Вивчення голографії у загальному курсі фізики вищої школи. Матеріали ХІІ Всеукраїнської науково-методичної конференції «Сучасні проблеми природничих наук та проблеми підготовки фахівців в  цій галузі». Миколаїв. 17–19 вересня 2009 р.</li>
+        <li>Пустовий О.М., Шморгун А.В., Шепета О.М. Наступність спеціального практикуму старших курсів і лабораторних робіт курсу загальної фізики вищої школи. Матеріали ІІ Міжнародної науково-практичної конференції „Фізико-технічна і фізична освіта у гуманістичній парадигмі”. – Керч. 10-13 вересня 2009 р. – с. 147-150.</li>
+        <li>Пустовий О.М. Аналіз та обробка даних лабораторних робіт спецпрактикуму за допомогою статистичних пакетів Statistika, SPSS, Excel. Матеріали Всеукраїнської науково-методичної конференції «Розвиток інтелектуальних вмінь  та творчих здібностей учнів і студентів у процесі навчання математики». – Суми. 3-4 грудня 2009 р. – с. 223-224.</li>
+        <li>Гриценко М.І., Пустовий О.М. Ліотропні рідкі кристали як елементи живої матерії. Матеріали 10-ї Міжнародної міждисциплінарної науково-практичної школи – конференції «Сучасні проблеми науки і освіти». Севастополь, 2010. с.142-145.</li>
+        <li>Пустовий О.М. Шепета О.М., Шморгун А.В. Актуалізація змісту задач курсу загальної фізики вищої школи// Матеріали Всеукраїнської науково-практичної конференції “Проектування освітніх середовищ як методична проблема”. Тези доповідей. – Херсон. 16-18 вересня 2010р. – с. 51-52.</li>
+        <li>Пустовий О.М. Вивчення майбутніми вчителями модуляції сигналів цифрового телебачення у загальному курсі фізики – Матеріали Міжнародної ІХ (ХІХ) науково-практичної конференції “Засоби і технології сучасного навчального середовища”, Кіровоград, 20-21 травня 2011 р. с. 70-72.</li>
+        <li>Пустовий О.М., Шепета О.М., Шморгун А.В. Активізація пізнавальної діяльності студентів за допомогою прикладних задач з елементами сучасних досягнень  науки і техніки// Збірник матеріалів Міжнародної науково-практичної конференції “Актуальні проблеми природничо-математичної освіти в середній і вищій школі”. – Херсон. 13-14 вересня 2012 р. – с. 210-211.</li>
+        <li>Пустовий О.М. Оцінка ефективності застосування методики формування знань про нові матеріали і технології за критеріями успішності та якості// Матеріали міжнародного форуму фахівців у галузі освітніх вимірювань – Київ.: 2012. – с. 103-104.</li>
+        <li>Пустовий О.М. Вивчення нових матеріалів і технологій в курсі загальної фізики// Збірник матеріалів Всеукраїнської науково-практичної конференції ”Актуальні проблеми і перспективи дидактики фізики” – Черкаси.: 2012. – с. 43-44.</li>
+        <li>Пустовий О.М., Шепета О.М., Голографічні носії інформації в курсі загальної фізики ВНЗ. – Матеріали конференції “Засоби і технології сучасного навчального середовища”, Кіровоград, 17-18 травня 2013 р.</li>
+        <li>Пустовий О.М., Шепета О.М., Шморгун А.В. Сучасні акумулятори в курсі загальної фізики педагогічних ВНЗ /Тези доповідей ХІV Всеукраїнської науково-методичної конференції присвяченої 100-річчю з дня заснування МНУ імені В.О. Сухомлинського ”Сучасні проблеми фізико-математичних наук та підготовка фахівців у цій галузі” – Миколаїв  2013р. – с. 109-110.</li>
+      </ul>
+    </div>
+    <div class="pub-group">
+      <h4>Статті у міжнародних наукових фахових виданнях <span class="pub-count">(4)</span></h4>
+      <ul class="pub-list">
+        <li>Гриценко Н.И., Кучеев С.И., Пустовый О.Н. Исследование холестерико-нематического перехода в оптической ячейке клинообразной формы// Материалы девятой международной конференции , "Физика в системе современного образования" (ФССО - 07), г. Санкт-Петербург, 4-8 июня 2007г., т.1., с 397-398.</li>
+        <li>Гриценко Н.И., Пустовый О.Н., Сергиенко В.П.  Специальный физический практикум по физике жидких кристаллов.// Материалы десятой международной учебно-методической конференции "Современный физический практикум".- Астрахань.,2008. – с. 211-212.</li>
+        <li>Дятлов Ю.В., Пустовый О.М. Необходимость наполнения курса общей физики высшей школы знаниями о современных технологиях и достижениях науки и техники// Materialele Conferintei Stiintifice Internationale “Optimizarea invatamantului in contextual societatii bazate pe cunoastere”. – Chisinau, 2-3 noiembrie 2012.,  p.45-47.</li>
+        <li>Гриценко Н.И., Пустовый О.Н. Лабораторный практикум по физике жидких кристаллов.// Материалы двенадцатой международной научной конференции "Физика в системе современного образования" (ФССО - 2013), г. Петрозаводск, 2013. – с. 295-298.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<div class="divider"></div>
+
+<section id="diagnosis">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Перша зустріч</span>
+      <span data-i18n="ru">Первая встреча</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Діагностика знань</span>
+      <span data-i18n="ru">Диагностика знаний</span>
+    </h2>
+  </div>
+  <p class="approach-text">
+    <span data-i18n-block="uk" class="active">За першу зустріч викладач визначає:</span>
+    <span data-i18n-block="ru">За первую встречу преподаватель определяет:</span>
+  </p>
+  <ol class="diag-list">
+    <li>
+      <span data-i18n-block="uk" class="active">Що учень уже знає добре</span>
+      <span data-i18n-block="ru">Что ученик уже знает хорошо</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Де знаходяться реальні прогалини</span>
+      <span data-i18n-block="ru">Где находятся реальные пробелы</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Які з них заважають розуміти поточну програму</span>
+      <span data-i18n-block="ru">Какие из них мешают понимать текущую программу</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">З чого варто почати роботу</span>
+      <span data-i18n-block="ru">С чего следует начать работу</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Який план підготовки потрібен для досягнення мети</span>
+      <span data-i18n-block="ru">Какой план подготовки нужен для достижения цели</span>
+    </li>
+  </ol>
+  <p class="diag-outcome">
+    <span data-i18n-block="uk" class="active">Після зустрічі батьки отримують зрозумілу картину: де ми зараз → куди прямуємо → що для цього потрібно зробити.</span>
+    <span data-i18n-block="ru">После встречи родители получают понятную картину: где мы сейчас → куда идём → что для этого нужно сделать.</span>
+  </p>
+  <a href="#contact" class="btn btn-primary">
+    <span data-i18n="uk" class="active">Записатися на діагностику</span>
+    <span data-i18n="ru">Записаться на диагностику</span>
+  </a>
+</section>
+
+<div class="divider"></div>
+
+<section id="lesson-flow">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Регулярні заняття</span>
+      <span data-i18n="ru">Регулярные занятия</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Як проходить заняття</span>
+      <span data-i18n="ru">Как проходит занятие</span>
+    </h2>
+  </div>
+  <ol class="diag-list">
+    <li>
+      <span data-i18n-block="uk" class="active">Коротко перевіряємо домашнє завдання та закріплюємо попередню тему</span>
+      <span data-i18n-block="ru">Коротко проверяем домашнее задание и закрепляем предыдущую тему</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Розбираємо нову тему — з поясненням логіки, а не лише формул</span>
+      <span data-i18n-block="ru">Разбираем новую тему — с объяснением логики, а не только формул</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Розв'язуємо задачі разом, поступово передаючи ініціативу учню</span>
+      <span data-i18n-block="ru">Решаем задачи вместе, постепенно передавая инициативу ученику</span>
+    </li>
+    <li>
+      <span data-i18n-block="uk" class="active">Даємо домашнє завдання і коротко повідомляємо батькам про прогрес</span>
+      <span data-i18n-block="ru">Даём домашнее задание и коротко сообщаем родителям о прогрессе</span>
+    </li>
+  </ol>
+  <p class="diag-outcome">
+    <span data-i18n-block="uk" class="active">Заняття триває 60 хвилин. Темп і план заняття підлаштовуються під конкретного учня — це не однакові уроки для всіх.</span>
+    <span data-i18n-block="ru">Занятие длится 60 минут. Темп и план занятия подстраиваются под конкретного ученика — это не одинаковые уроки для всех.</span>
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<section id="audiences">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Кому підходить</span>
+      <span data-i18n="ru">Кому подходит</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Школярам, абітурієнтам, студентам — і українцям за кордоном</span>
+      <span data-i18n="ru">Школьникам, абитуриентам, студентам — и украинцам за рубежом</span>
+    </h2>
+  </div>
+  <div class="cards cards-4">
+    <div class="card">
+      <h3 data-i18n-block="uk" class="active">Школярам</h3>
+      <h3 data-i18n-block="ru">Школьникам</h3>
+      <p data-i18n-block="uk" class="active">Усунути прогалини, підвищити успішність, почати розуміти предмет, підготуватися до контрольних.</p>
+      <p data-i18n-block="ru">Устранить пробелы, повысить успеваемость, начать понимать предмет, подготовиться к контрольным.</p>
+    </div>
+    <div class="card">
+      <h3 data-i18n-block="uk" class="active">Абітурієнтам</h3>
+      <h3 data-i18n-block="ru">Абитуриентам</h3>
+      <p data-i18n-block="uk" class="active">Системна підготовка до НМТ/ЗНО та інших іспитів, стратегія підготовки, робота з типовими помилками.</p>
+      <p data-i18n-block="ru">Системная подготовка к НМТ/ЗНО и другим экзаменам, стратегия подготовки, работа с типичными ошибками.</p>
+    </div>
+    <div class="card">
+      <h3 data-i18n-block="uk" class="active">Студентам</h3>
+      <h3 data-i18n-block="ru">Студентам</h3>
+      <p data-i18n-block="uk" class="active">Вища математика та фізика, складні теми, підготовка до заліків та іспитів.</p>
+      <p data-i18n-block="ru">Высшая математика и физика, сложные темы, подготовка к зачётам и экзаменам.</p>
+    </div>
+    <div class="card">
+      <h3 data-i18n-block="uk" class="active">Українцям за кордоном</h3>
+      <h3 data-i18n-block="ru">Украинцам за рубежом</h3>
+      <p data-i18n-block="uk" class="active">Дитина навчається в іншій країні, але складну математику може розбирати рідною мовою, якою дійсно розуміє пояснення.</p>
+      <p data-i18n-block="ru">Ребёнок учится в другой стране, но сложную математику может разбирать на языке, на котором действительно понимает объяснение.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="philosophy">
+  <div class="philosophy-box">
+    <div class="philosophy-quote">
+      <span data-i18n="uk" class="active">Не заучувати — розуміти</span>
+      <span data-i18n="ru">Не заучивать — понимать</span>
+    </div>
+    <p>
+      <span data-i18n-block="uk" class="active">Математика і фізика стають значно простішими, коли учень розуміє зв'язки між поняттями, а не намагається запам'ятати набір формул і алгоритмів. Завдання викладача — не розв'язати задачу замість учня, а навчити його бачити структуру задачі, обирати спосіб розв'язання і перевіряти власне міркування.</span>
+      <span data-i18n-block="ru">Математика и физика становятся значительно проще, когда ученик понимает связи между понятиями, а не пытается запомнить набор формул и алгоритмов. Задача преподавателя — не решить задачу вместо ученика, а научить его видеть структуру задачи, выбирать способ решения и проверять собственное рассуждение.</span>
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="reviews">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Відгуки</span>
+      <span data-i18n="ru">Отзывы</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Що кажуть батьки та учні</span>
+      <span data-i18n="ru">Что говорят родители и ученики</span>
+    </h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <video class="review-video" controls playsinline preload="metadata">
+        <source src="assets/review1.mp4" type="video/mp4">
+      </video>
+      <p class="review-caption">
+        <span data-i18n-block="uk" class="active">Відгук учня — підпис додасте пізніше.</span>
+        <span data-i18n-block="ru">Отзыв ученика — подпись добавите позже.</span>
+      </p>
+    </div>
+    <div class="review-card">
+      <video class="review-video" controls playsinline preload="metadata">
+        <source src="assets/review2.mp4" type="video/mp4">
+      </video>
+      <p class="review-caption">
+        <span data-i18n-block="uk" class="active">Відгук учня — підпис додасте пізніше.</span>
+        <span data-i18n-block="ru">Отзыв ученика — подпись добавите позже.</span>
+      </p>
+    </div>
+    <div class="review-card">
+      <video class="review-video" controls playsinline preload="metadata">
+        <source src="assets/review3.mp4" type="video/mp4">
+      </video>
+      <p class="review-caption">
+        <span data-i18n-block="uk" class="active">Відгук учня — підпис додасте пізніше.</span>
+        <span data-i18n-block="ru">Отзыв ученика — подпись добавите позже.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="subjects">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Предмети</span>
+      <span data-i18n="ru">Предметы</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Три предмети, одна логіка мислення</span>
+      <span data-i18n="ru">Три предмета, одна логика мышления</span>
+    </h2>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <span class="glyph">∫ f(x) dx</span>
+      <h3 data-i18n-block="uk" class="active">Математика</h3>
+      <h3 data-i18n-block="ru">Математика</h3>
+      <p data-i18n-block="uk" class="active">Алгебра, геометрія, підготовка до контрольних, ЗНО/НМТ та вступних іспитів.</p>
+      <p data-i18n-block="ru">Алгебра, геометрия, подготовка к контрольным, ЗНО/НМТ и вступительным экзаменам.</p>
+    </div>
+    <div class="card">
+      <span class="glyph">F = ma</span>
+      <h3 data-i18n-block="uk" class="active">Фізика</h3>
+      <h3 data-i18n-block="ru">Физика</h3>
+      <p data-i18n-block="uk" class="active">Механіка, електрика, оптика — від шкільної програми до вступу у виш.</p>
+      <p data-i18n-block="ru">Механика, электричество, оптика — от школьной программы до поступления в вуз.</p>
+    </div>
+    <div class="card">
+      <span class="glyph">H₂O</span>
+      <h3 data-i18n-block="uk" class="active">Хімія</h3>
+      <h3 data-i18n-block="ru">Химия</h3>
+      <p data-i18n-block="uk" class="active">Основи хімії у зв'язці з фізикою та математикою — для повного розуміння предмету.</p>
+      <p data-i18n-block="ru">Основы химии в связке с физикой и математикой — для полного понимания предмета.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="pricing">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Вартість</span>
+      <span data-i18n="ru">Стоимость</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Прозорі ціни за заняття</span>
+      <span data-i18n="ru">Прозрачные цены за занятие</span>
+    </h2>
+  </div>
+
+  <div class="price-table">
+    <div class="price-row">
+      <div>
+        <div class="name" data-i18n-block="uk" class="active">Індивідуальне заняття (60 хв)</div>
+        <div class="name" data-i18n-block="ru">Индивидуальное занятие (60 мин)</div>
+        <div class="note" data-i18n-block="uk" class="active">Математика, фізика або хімія</div>
+        <div class="note" data-i18n-block="ru">Математика, физика или химия</div>
+      </div>
+      <div class="amount">—</div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="name" data-i18n-block="uk" class="active">Пакет 4 заняття</div>
+        <div class="name" data-i18n-block="ru">Пакет 4 занятия</div>
+        <div class="note" data-i18n-block="uk" class="active">Регулярна підготовка, знижка за пакет</div>
+        <div class="note" data-i18n-block="ru">Регулярная подготовка, скидка за пакет</div>
+      </div>
+      <div class="amount">—</div>
+    </div>
+    <div class="price-row">
+      <div>
+        <div class="name" data-i18n-block="uk" class="active">Підготовка до ЗНО/НМТ</div>
+        <div class="name" data-i18n-block="ru">Подготовка к ЗНО/НМТ</div>
+        <div class="note" data-i18n-block="uk" class="active">Курс з чіткою структурою по темах екзамену</div>
+        <div class="note" data-i18n-block="ru">Курс с чёткой структурой по темам экзамена</div>
+      </div>
+      <div class="amount">—</div>
+    </div>
+  </div>
+  <div class="price-flag">
+    <span data-i18n-block="uk" class="active">Тут потрібно вписати реальні ціни — заповніть після отримання прайсу.</span>
+    <span data-i18n-block="ru">Здесь нужно вписать реальные цены — заполните после получения прайса.</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="faq">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Питання</span>
+      <span data-i18n="ru">Вопросы</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Часті запитання</span>
+      <span data-i18n="ru">Частые вопросы</span>
+    </h2>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>
+        <span data-i18n="uk" class="active">Чи є пробне заняття?</span>
+        <span data-i18n="ru">Есть ли пробное занятие?</span>
+      </summary>
+      <p>
+        <span data-i18n-block="uk" class="active">Перша зустріч — це діагностика знань, яка одночасно виконує роль пробного заняття: ви побачите, як проходить робота, а викладач визначить рівень і план підготовки. Умови діагностики — за домовленістю під час першого контакту.</span>
+        <span data-i18n-block="ru">Первая встреча — это диагностика знаний, которая одновременно выполняет роль пробного занятия: вы увидите, как проходит работа, а преподаватель определит уровень и план подготовки. Условия диагностики — по договорённости при первом контакте.</span>
+      </p>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span data-i18n="uk" class="active">На якій платформі проходять заняття?</span>
+        <span data-i18n="ru">На какой платформе проходят занятия?</span>
+      </summary>
+      <p>
+        <span data-i18n-block="uk" class="active">Уточнюється — платформа (Zoom, Google Meet або інша) погоджується під час запису на діагностику.</span>
+        <span data-i18n-block="ru">Уточняется — платформа (Zoom, Google Meet или другая) согласовывается при записи на диагностику.</span>
+      </p>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span data-i18n="uk" class="active">Що робити, якщо потрібно перенести заняття?</span>
+        <span data-i18n="ru">Что делать, если нужно перенести занятие?</span>
+      </summary>
+      <p>
+        <span data-i18n-block="uk" class="active">Напишіть заздалегідь — час можна узгодити й перенести на зручний день.</span>
+        <span data-i18n-block="ru">Напишите заранее — время можно согласовать и перенести на удобный день.</span>
+      </p>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span data-i18n="uk" class="active">Як відстежується прогрес учня?</span>
+        <span data-i18n="ru">Как отслеживается прогресс ученика?</span>
+      </summary>
+      <p>
+        <span data-i18n-block="uk" class="active">Після діагностики батьки отримують зрозумілий план: де ми зараз і куди прямуємо. Далі прогрес обговорюється по ходу занять.</span>
+        <span data-i18n-block="ru">После диагностики родители получают понятный план: где мы сейчас и куда движемся. Далее прогресс обсуждается по ходу занятий.</span>
+      </p>
+    </details>
+    <details class="faq-item">
+      <summary>
+        <span data-i18n="uk" class="active">Що робити, якщо темп заняття не підходить дитині?</span>
+        <span data-i18n="ru">Что делать, если темп занятия не подходит ребёнку?</span>
+      </summary>
+      <p>
+        <span data-i18n-block="uk" class="active">Програма індивідуальна, тому темп і план можна скоригувати в будь-який момент — це не однакові уроки для всіх учнів.</span>
+        <span data-i18n-block="ru">Программа индивидуальна, поэтому темп и план можно скорректировать в любой момент — это не одинаковые уроки для всех учеников.</span>
+      </p>
+    </details>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="calendar">
+  <div class="section-head" data-reveal>
+    <div class="eyebrow">
+      <span data-i18n="uk" class="active">Запис на заняття</span>
+      <span data-i18n="ru">Запись на занятие</span>
+    </div>
+    <h2>
+      <span data-i18n="uk" class="active">Оберіть зручний день і час</span>
+      <span data-i18n="ru">Выберите удобный день и время</span>
+    </h2>
+  </div>
+  <p class="cal-hint">
+    <span data-i18n-block="uk" class="active">Натисніть на день і час — вони підставляться у форму нижче, залишиться лише вписати ім'я та телефон.</span>
+    <span data-i18n-block="ru">Нажмите на день и время — они подставятся в форму ниже, останется только вписать имя и телефон.</span>
+  </p>
+  <div id="cal-days" class="cal-days"></div>
+  <div id="cal-selected" class="cal-selected"></div>
+</section>
+
+<div class="divider"></div>
+
+<section id="contact">
+  <div class="contact-box">
+    <div>
+      <h2>
+        <span data-i18n="uk" class="active">Запишіться на діагностику</span>
+        <span data-i18n="ru">Запишитесь на диагностику</span>
+      </h2>
+      <p>
+        <span data-i18n-block="uk" class="active">Залиште контакт — і ми домовимось про зручний час. Заняття проходять онлайн.</span>
+        <span data-i18n-block="ru">Оставьте контакт — и мы договоримся об удобном времени. Занятия проходят онлайн.</span>
+      </p>
+      <div class="contact-links">
+        <a href="#" data-i18n="uk" class="active">Телефон: додати</a>
+        <a href="#" data-i18n="ru">Телефон: добавить</a>
+        <a href="#" data-i18n="uk" class="active">Telegram: додати</a>
+        <a href="#" data-i18n="ru">Telegram: добавить</a>
+      </div>
+    </div>
+    <form onsubmit="event.preventDefault(); alert('Форма поки не підключена до відправки — потрібен email або сервіс для прийому заявок.');">
+      <input type="text" placeholder="Ім'я / Имя" data-i18n-placeholder-uk="Ім'я" data-i18n-placeholder-ru="Имя" required>
+      <input type="tel" placeholder="Телефон" required>
+      <textarea id="msg-field" placeholder="Який предмет цікавить? / Какой предмет интересует?"></textarea>
+      <button type="submit" class="btn btn-primary">
+        <span data-i18n="uk" class="active">Надіслати</span>
+        <span data-i18n="ru">Отправить</span>
+      </button>
+    </form>
+  </div>
+</section>
+
+<a href="#contact" class="float-cta" id="float-cta">
+  <span data-i18n="uk" class="active">Записатися на діагностику</span>
+  <span data-i18n="ru">Записаться на диагностику</span>
+</a>
+
+<footer>
+  <span data-i18n="uk" class="active">© Пустовий Олег Миколайович — репетитор з математики, фізики та хімії</span>
+  <span data-i18n="ru">© Пустовой Олег Николаевич — репетитор по математике, физике и химии</span>
+</footer>
+
+<script>
+function setLang(lang){
+  document.querySelectorAll('.lang-toggle button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    el.classList.toggle('active', el.dataset.i18n === lang);
+  });
+  document.querySelectorAll('[data-i18n-block]').forEach(el=>{
+    el.classList.toggle('active', el.dataset.i18nBlock === lang);
+  });
+  document.querySelectorAll('video.video-embed').forEach(v=>{
+    if (v.dataset.i18nBlock !== lang) v.pause();
+  });
+  document.documentElement.lang = lang;
+  renderCalendar(lang);
+}
+
+const TIME_SLOTS = ['10:00','12:00','14:00','16:00','18:00'];
+
+function renderCalendar(lang){
+  const container = document.getElementById('cal-days');
+  if(!container) return;
+  container.innerHTML = '';
+
+  const locale = lang === 'ru' ? 'ru-RU' : 'uk-UA';
+  const dayFmt = new Intl.DateTimeFormat(locale, { weekday: 'short', day: 'numeric', month: 'short' });
+
+  const today = new Date();
+  let daysAdded = 0;
+  let offset = 1; // start from tomorrow
+
+  while (daysAdded < 7) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + offset);
+    offset++;
+
+    // skip Sundays (0)
+    if (d.getDay() === 0) continue;
+
+    const dayCard = document.createElement('div');
+    dayCard.className = 'cal-day';
+
+    const dateLabel = document.createElement('div');
+    dateLabel.className = 'cal-date';
+    dateLabel.textContent = dayFmt.format(d);
+    dayCard.appendChild(dateLabel);
+
+    const slotsWrap = document.createElement('div');
+    slotsWrap.className = 'cal-slots';
+
+    TIME_SLOTS.forEach(time => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cal-slot';
+      btn.textContent = time;
+      btn.addEventListener('click', () => chooseSlot(d, time, dayFmt, lang, btn));
+      slotsWrap.appendChild(btn);
+    });
+
+    dayCard.appendChild(slotsWrap);
+    container.appendChild(dayCard);
+    daysAdded++;
+  }
+}
+
+function chooseSlot(date, time, dayFmt, lang, btnEl){
+  document.querySelectorAll('.cal-slot.chosen').forEach(b => b.classList.remove('chosen'));
+  btnEl.classList.add('chosen');
+
+  const dateStr = dayFmt.format(date);
+  const label = lang === 'ru'
+    ? `Желаемое время: ${dateStr}, ${time}`
+    : `Бажаний час: ${dateStr}, ${time}`;
+
+  const selectedEl = document.getElementById('cal-selected');
+  if (selectedEl) selectedEl.textContent = label;
+
+  const msgField = document.getElementById('msg-field');
+  if (msgField) {
+    const lines = msgField.value.split('\n').filter(l => !l.startsWith('Бажаний час:') && !l.startsWith('Желаемое время:'));
+    lines.unshift(label);
+    msgField.value = lines.join('\n');
+  }
+
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+renderCalendar(document.documentElement.lang || 'uk');
+
+const floatCta = document.getElementById('float-cta');
+const contactSection = document.getElementById('contact');
+if (floatCta && contactSection) {
+  window.addEventListener('scroll', () => {
+    const heroHeight = document.querySelector('.hero').offsetHeight;
+    const contactTop = contactSection.getBoundingClientRect().top + window.scrollY;
+    const scrollY = window.scrollY;
+    const nearContact = scrollY + window.innerHeight > contactTop - 100;
+    floatCta.classList.toggle('visible', scrollY > heroHeight && !nearContact);
+  });
+}
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!prefersReducedMotion) {
+  document.querySelectorAll('.card, .funnel-step, .diag-list li, .adv-grid li, .philosophy-box, .cal-day').forEach(el => {
+    el.setAttribute('data-reveal', '');
+  });
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+} else {
+  document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('revealed'));
+}
+</script>
+
+</body>
+</html>
